@@ -51,16 +51,15 @@ The training set is the largest of the sets since it its the set of samples that
 
 ![output_8_1](https://cloud.githubusercontent.com/assets/712014/24229748/64400c92-0f38-11e7-822c-f529fbcf4b44.png)
 
-> Blue: Train
-> Orange: Validation
-> Green: Test
->
-> Y-Axis: Number of samples
-> X-Axis: Identifier/Index for the type of sign
+- Blue: Train
+- Orange: Validation
+- Green: Test
+- Y-Axis: Number of samples
+- X-Axis: Identifier/Index for the type of sign
 
 ## The Classifier
 
-The goal of the classifier is to take images of traffic signs that it has never seen before and be able to accurately classify them. This was accomplished using machine learning by applying a large training data set to a constitutional neural network.
+The goal of the classifier is to take images of traffic signs that it has never seen before and be able to accurately classify them. This was accomplished using machine learning by applying a large training data set to a convolutional neural network.
 
 ### Preprocessing
 
@@ -87,6 +86,10 @@ I used the [LeNet](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) architect
 | 4 | Pooling (2x2) | 10x10x16 | 5x5x16 | - |
 | 5 | Fully-Connected | 120 | 84 | ReLU |
 | 6 | Fully-Connected | 84 | 43 | ReLU |
+
+### Solution
+
+The LeNet architecture was choosen as a starting point since it is an effective architecture for classifying images in the MNIST dataset. By itself, the architecture was able to reach a 0.879 validation accuracy however was limited by a couple factors. The LeNet architecture was too small to model the traffic sign concept since the MNIST data has much less features than you would find in traffic sign images. By adding a 1x1 convolutional layer I was able to increase the size of the network to make it better at modeling the concept.
 
 **Modified LeNet Architecture** (*Testing Accuracy: 0.941*)
 
@@ -115,6 +118,8 @@ DROPOUT = 0.60
 
 For training the neural network, I used the [AdamOptimizer](https://www.tensorflow.org/api_docs/python/tf/train/AdamOptimizer) provided by TensorFlow. As for the hyper-parameters, they were chosen by experimenting with different values.
 
+The number of epochs were increased because using dropout required more iterations to create a more generalized model. Batch size is typically memory limited so if more memory is available, increasing the batch size is beneficial for training the network. Since I am using dropout on one of the layers, a new hyper parameter is introduced.
+
 ## Outside the Dataset
 
 As an exercise of showing the effectiveness of the classifier on data outside the dataset, I found several images of German traffic signs on the internet and ran them through the classifier.
@@ -124,6 +129,8 @@ As an exercise of showing the effectiveness of the classifier on data outside th
 I used a couple approaches to grab traffic sign images. I first started with grabbing the top images off of Google for the phrase "German traffic signs". This produced some SVG based images which are less realistic but an interesting test case.
 
 The other approach I used was taking advantage of Google Street View to produce images in a real life setting. I did a screenshot and some quick processing to get it in a format that was suitable for the classifier.
+
+Although the new images had were able to be classified successfully, I could see cases where images could not be classified correctly. Since the dataset has under-represented labels, I could see images in those classes that have unusual features (blurry, occluded, rotated) being classified incorrectly.
 
 ![image](https://cloud.githubusercontent.com/assets/712014/24281902/5f79b91a-1019-11e7-9b53-d0668726537c.png)
 
